@@ -1,0 +1,24 @@
+backend:
+  name: github
+  repo: loiman9552-spec/floklok-website
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "settings"
+    label: "網站設定"
+    files:
+      - name: "packages"
+        label: "套餐資料"
+        file: "data.json"
+        fields:
+          - label: "精選套餐"
+            name: "premium_packages"
+            widget: "list"
+            fields:
+              - {label: "標題", name: "title", widget: "string"}
+              - {label: "重量/規格", name: "weight", widget: "string"}
+              - {label: "優惠標籤", name: "original", widget: "string", required: false}
+              - {label: "價錢 (數字)", name: "price", widget: "number"}
