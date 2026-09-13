@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鮮樂樂 - 季節限定大閘蟹</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BQ7DG6RQ53"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BQ7DG6RQ53');
+    </script>
+    <!-- End Google Analytics 4 -->
+    
+    <style>
+        /* ---------- 方案二：右邊圓點導航 CSS ---------- */
+        #dot-nav {
+            position: fixed;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        #dot-nav a {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ccc;
+            display: block;
+            position: relative;
+            transition: 0.3s;
+        }
+        #dot-nav a.active {
+            background: var(--primary);
+            transform: scale(1.4);
+        }
+        #dot-nav a::after {
+            content: attr(data-title);
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+        }
+        #dot-nav a:hover::after {
+            opacity: 1;
+        }
+        /* --------------------------------------------- */
+        html, body { overflow-x: hidden; max-width: 100%; }
+        .announcement a { color: #D4AF37; text-decoration: underline; font-weight: bold; word-break: break-all; }
+        .announcement a:hover { color: #ffffff; }
+        :root { --primary: #C41E3A; --secondary: #8B0000; --gold: #D4AF37; --dark: #1A1A1A; --light: #FDF6F0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; background: var(--light); color: var(--dark); line-height: 1.6; scroll-behavior: smooth; }
+        header { position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 100; }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+        .logo-text { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+        .logo-sub { font-size: 0.7rem; color: #888; }
+        nav { display: flex; align-items: center; gap: 30px; }
+        nav a { text-decoration: none; color: #444; font-weight: 500; transition: color 0.2s; }
+        nav a:hover { color: var(--primary); }
+        .order-btn { background: var(--primary); color: #fff !important; padding: 10px 20px; border-radius: 25px; font-weight: 600; }
+        .menu-toggle { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #444; }
+
+        @keyframes sectionFlash {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.02); }
+            40% { transform: scale(1); }
+            60% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .section-flash { animation: sectionFlash 1s ease-in-out; }
+
+        section { scroll-margin-top: 90px; }
+
+        .floating-share-btn {
+            position: fixed;
+            top: 85px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9999;
+            border: none;
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+            transition: all 0.2s;
+        }
+        .floating-share-btn:hover { background-color: var(--secondary); transform: scale(1.1); }
+        
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: var(--dark); padding: 80px 20px 60px; position: relative; overflow: hidden; scroll-margin-top: 90px; }
+        .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; z-index: 0; animation: heroFade 15s infinite; }
+        .slide-1 { background-image: url('/.netlify/images?url=/slide1.jpg&w=1920&q=70'); animation-delay: 0s; }
+        .slide-2 { background-image: url('/.netlify/images?url=/slide2.jpg&w=1920&q=70'); animation-delay: 5s; }
+        .slide-3 { background-image: url('/.netlify/images?url=/slide3.jpg&w=1920&q=70'); animation-delay: 10s; }
+        @keyframes heroFade { 0% { opacity: 0; } 10% { opacity: 1; } 33% { opacity: 1; } 43% { opacity: 0; } 100% { opacity: 0; } }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1; }
+
+        .hero-content { position: relative; z-index: 2; color: #fff; }
+        .hero-logo { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--gold); object-fit: cover; margin-bottom: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.3); }
+        .hero h1 { font-size: 80px; font-weight: 900; letter-spacing: 2px; margin-bottom: 10px; line-height: 1.2; color: #fff; text-shadow: 5px 0 0 #D2691E, -5px 0 0 #D2691E, 0 5px 0 #D2691E, 0 -5px 0 #D2691E, 3px 3px 0 #D2691E, -3px -3px 0 #D2691E, 3px -3px 0 #D2691E, -3px 3px 0 #D2691E, 5px 5px 10px rgba(0,0,0,0.9); }
+        .hero p { font-size: 1.3rem; color: #fff; font-weight: 800; margin-bottom: 15px; text-shadow: 3px 0 0 #D2691E, -3px 0 0 #D2691E, 0 3px 0 #D2691E, 0 -3px 0 #D2691E, 2px 2px 0 #D2691E, -2px -2px 0 #D2691E, 2px -2px 0 #D2691E, -2px 2px 0 #D2691E, 3px 3px 6px rgba(0,0,0,0.9); }
+
+        .announcement { display: inline-block; background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255,255,255,0.4); padding: 10px 25px; border-radius: 30px; font-size: 1rem; margin-bottom: 30px; color: #fff; }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .btn { display: inline-block; padding: 14px 30px; border-radius: 30px; font-weight: 700; text-decoration: none; transition: all 0.3s; cursor: pointer; }
+        .btn-gold { background: var(--gold); color: #fff !important; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .btn-gold:hover { background: #e6c200; transform: scale(1.05); }
+        .btn-outline { background: transparent; border: 2px solid rgba(255,255,255,0.9); color: #fff; }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+        section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title span { color: var(--primary); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; }
+        .section-title h2 { font-size: 2.5rem; font-weight: 700; margin-top: 5px; }
+        
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .about-text p { color: #666; font-size: 1.1rem; margin-bottom: 15px; }
+        .about-stats { display: flex; flex-wrap: wrap; gap: 20px 30px; margin-top: 20px; justify-content: center; }
+        .stat { text-align: center; min-width: 90px; }
+        .stat .number { font-size: 2rem; font-weight: 700; color: var(--primary); white-space: nowrap; }
+        .stat .label { font-size: 0.8rem; color: #888; margin-top: 5px; white-space: nowrap; }
+
+        .about-image { background: rgba(196, 30, 58, 0.7) url('/.netlify/images?url=/bg.jpg&w=800&q=70') center/cover no-repeat; border-radius: 20px; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; position: relative; container-type: inline-size; width: 100%; max-width: 100%; margin: 20px auto 0; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .about-badge { position: static; background: transparent; color: #fff; font-weight: 900; font-size: 22cqw; text-align: center; padding: 0; line-height: 1.3; box-shadow: none; text-shadow: 6px 0 0 #8B0000, -6px 0 0 #8B0000, 0 6px 0 #8B0000, 0 -6px 0 #8B0000, 4px 4px 0 #8B0000, -4px -4px 0 #8B0000, 4px -4px 0 #8B0000, -4px 4px 0 #8B0000, 6px 6px 12px rgba(0,0,0,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; }
+
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .product-card { background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        .product-image { aspect-ratio: 1; position: relative; overflow: hidden; background: #fdf0e8; display: flex; align-items: center; justify-content: center; }
+        .product-image img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
+        .product-badge { position: absolute; top: 15px; left: 15px; background: var(--primary); color: #fff; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; z-index: 10; }
+
+        .product-info { padding: 25px; }
+        .product-info h3 { font-size: 1.4rem; margin-bottom: 10px; }
+        .product-info p { color: #666; font-size: 0.95rem; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .product-price { font-size: 1.6rem; font-weight: 700; color: var(--primary); display: flex; align-items: baseline; gap: 5px; margin-bottom: 10px; }
+        .product-price small { font-size: 1rem; color: #666; font-weight: normal; }
+        
+        .product-tag { 
+            display: inline-block; 
+            background: #f0f0f0; 
+            color: #555; 
+            padding: 4px 10px; 
+            border-radius: 5px; 
+            font-size: clamp(0.6rem, 1.5vw, 0.85rem); 
+            white-space: nowrap; 
+            max-width: 100%; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            margin-bottom: 10px; 
+        }
+
+        .product-btn { display: inline-block; background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: 600; transition: background 0.2s; border: none; cursor: pointer; font-family: inherit; font-size: 1rem; width: 100%; }
+        .product-btn:hover { background: var(--secondary); }
+
+        .eating-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .eating-card { background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
+        .eating-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        .eating-image-placeholder { aspect-ratio: 1; background: linear-gradient(135deg, #fdf0e8, #fdf6e0); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #888; font-size: 1.2rem; }
+        .eating-image-placeholder img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
+        .eating-info { padding: 25px; }
+        .eating-info h3 { font-size: 1.4rem; margin-bottom: 10px; color: var(--primary); }
+        .eating-info p { color: #666; font-size: 0.95rem; margin-bottom: 15px; }
+        .eating-info ul { list-style: none; padding: 0; margin-bottom: 15px; }
+        .eating-info ul li { color: #555; font-size: 0.95rem; margin-bottom: 10px; line-height: 1.6; padding-left: 18px; position: relative; }
+        .eating-info ul li::before { content: '•'; position: absolute; left: 0; color: var(--primary); font-size: 1.2rem; line-height: 1.4; }
+        .eating-info ul li strong { color: var(--dark); }
+
+        .history-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; margin-top: 30px; }
+        .history-item { cursor: pointer; overflow: hidden; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s; position: relative; display: flex; align-items: center; justify-content: center; background: #fdf0e8; }
+        .history-item img { width: 100%; height: 150px; display: block; object-fit: cover; }
+
+        .visitor-counter { text-align: center; font-size: 1.2rem; color: #888; margin-top: 40px; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); max-width: 400px; margin-left: auto; margin-right: auto; }
+        .visitor-counter span { color: var(--primary); font-weight: bold; font-size: 1.6rem; }
+
+        .lightbox { display: none; position: fixed; z-index: 5000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9); }
+        .lightbox-content { margin: 5% auto; display: block; max-width: 90%; max-height: 90%; border-radius: 10px; }
+        .lightbox-close { position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; }
+        .lightbox-close:hover { color: #bbb; }
+
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .contact-item { background: #fff; border-radius: 20px; padding: 25px; display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 0; }
+        .contact-icon { font-size: 2rem; background: rgba(196,30,58,0.1); padding: 10px; border-radius: 15px; }
+        .contact-item h4 { font-size: 1.1rem; margin-bottom: 5px; white-space: nowrap; }
+        .contact-item p { color: #666; font-size: 0.95rem; white-space: nowrap; }
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; grid-auto-rows: 1fr; }
+        .social-grid .contact-item { padding: 15px; align-items: center; min-height: 80px; width: 100%; text-decoration: none; color: inherit; }
+        
+        .map-container { width: 100%; max-width: 100%; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); min-height: 400px; }
+        .map-container iframe { width: 100%; height: 100%; min-height: 400px; border: 0; }
+
+        .cooperation-content { max-width: 600px; margin: 0 auto; position: relative; left: 10px; display: grid; grid-template-columns: 1fr 200px; gap: 10px; align-items: center; padding: 30px; background: #fff; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .cooperation-text p { color: #666; font-size: 1rem; margin-bottom: 15px; }
+        .cooperation-right { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%; }
+        .qr-box { width: 100%; max-width: 160px; background: #fff; border: 2px solid #eee; border-radius: 15px; padding: 10px; text-align: center; position: relative; overflow: hidden; }
+        .qr-box h4 { font-size: 1rem; color: var(--primary); margin-bottom: 10px; }
+        .qr-box img { width: 100%; display: block; border-radius: 5px; }
+        .cooperation-phone { justify-content: center; width: 100%; max-width: 160px; margin-bottom: 0 !important; padding: 15px; }
+        .cooperation-phone h4 { font-size: 1rem; }
+        .cooperation-phone p { font-size: 0.9rem; }
+
+        footer { background: var(--dark); color: #fff; padding: 30px 20px; text-align: center; }
+        footer a { color: #ccc; text-decoration: none; margin: 0 10px; }
+        footer a:hover { color: var(--gold); }
+
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: #fff; margin: 10% auto; padding: 25px; border-radius: 15px; width: 90%; max-width: 650px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        .close:hover, .close:focus { color: #000; text-decoration: none; cursor: pointer; }
+        #modalTitle { color: var(--primary); margin-bottom: 15px; text-align: center; }
+        
+        .modal-columns { 
+            display: flex; 
+            gap: 15px; 
+            flex-direction: row; 
+            align-items: stretch; 
+        }
+        .modal-column { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            min-width: 0; 
+        }
+        .modal-column-title { 
+            text-align: center; 
+            font-weight: bold; 
+            color: var(--secondary); 
+            margin-bottom: 5px; 
+            font-size: 1.1rem; 
+            flex-shrink: 0; 
+        }
+        
+        .option-btn { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            width: 100%; 
+            min-height: 120px; 
+            padding: 15px; 
+            background-color: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 1rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-align: center; 
+            text-decoration: none; 
+            transition: 0.2s; 
+        }
+        .option-btn:hover { background-color: var(--secondary); }
+        .option-btn .info-text { 
+            display: block; 
+            font-weight: normal; 
+            font-size: 0.85rem; 
+            margin-top: 5px; 
+            opacity: 0.95; 
+            line-height: 1.5;
+            white-space: normal; 
+            word-break: break-all;
+        }
+
+        #qty-control { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+        
+        .qty-box { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .qty-btn { width: 40px; height: 40px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 50%; cursor: pointer; font-size: 20px; line-height: 1; }
+        .qty-btn:hover { background: #ddd; }
+        .qty-num { font-size: 24px; font-weight: bold; width: 60px; text-align: center; }
+        .total-price { font-size: 20px; color: #C41E3A; font-weight: bold; text-align: center; margin-bottom: 20px; }
+        .confirm-btn { display: block; width: 100%; padding: 15px; background-color: #C41E3A; color: white; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
+        .confirm-btn:hover { background-color: #8B0000; }
+
+        /* ============ 手機版優化：強制產品卡片兩列並排 ============ */
+        @media (max-width: 768px) {
+            section { width: 100% !important; padding: 40px 15px; scroll-margin-top: 120px; }
+            .about-grid, .contact-grid, .cooperation-content { grid-template-columns: 1fr; }
+            .about-image { max-width: 100% !important; }
+            .social-grid { grid-template-columns: 1fr; }
+            .social-grid .contact-item { grid-column: auto !important; width: 100%; }
+            .map-container { width: 100% !important; margin: 0 auto !important; display: block; min-height: 300px; }
+            .map-container iframe { min-height: 300px; }
+            .contact-item h4, .contact-item p { white-space: normal; word-break: break-word; }
+            
+            .hero { min-height: auto; padding: 100px 15px 50px; }
+            .hero-logo { width: 100px !important; height: 100px !important; }
+            .hero h1 { font-size: 1.8rem !important; text-shadow: 2px 0 0 #D2691E, -2px 0 0 #D2691E, 0 2px 0 #D2691E, 0 -2px 0 #D2691E, 1px 1px 0 #D2691E, -1px -1px 0 #D2691E, 1px -1px 0 #D2691E, -1px 1px 0 #D2691E, 2px 2px 4px rgba(0,0,0,0.9); }
+            .hero p { font-size: 0.9rem !important; }
+            .announcement { font-size: 0.8rem; padding: 8px 15px; }
+            .btn { padding: 10px 20px; font-size: 0.9rem; }
+            
+            .header-container { height: 60px; }
+            .logo-text { font-size: 1.1rem; }
+            .logo-sub { font-size: 0.6rem; }
+            .logo img { width: 35px !important; height: 35px !important; }
+            nav { display: none; position: absolute; top: 60px; left: 0; right: 0; background: #fff; flex-direction: column; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); gap: 15px; }
+            nav.active { display: flex; }
+            .menu-toggle { display: block; }
+            
+            .section-title { margin-bottom: 30px; }
+            .section-title h2 { font-size: 1.6rem; }
+            
+            #dot-nav { right: 5px; gap: 8px; }
+            #dot-nav a { width: 7px; height: 7px; }
+            #dot-nav a.active { transform: scale(1.2); }
+            
+            .floating-share-btn { top: 70px; right: 10px; width: 40px; height: 40px; }
+
+            /* *** 關鍵修改：產品卡片左右兩列 *** */
+            .products-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+            .product-image { aspect-ratio: 1 / 1; border-radius: 10px 10px 0 0; }
+            .product-info { padding: 10px; }
+            .product-info h3 { font-size: 0.95rem; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .product-info p { font-size: 0.8rem; margin-bottom: 8px; -webkit-line-clamp: 2; }
+            .product-price { font-size: 1rem; display: block; margin-bottom: 5px; }
+            .product-price small { font-size: 0.65rem; }
+            .product-tag { font-size: 0.55rem; padding: 2px 5px; margin-bottom: 5px; }
+            .product-btn { padding: 8px 5px; font-size: 0.85rem; border-radius: 15px; }
+            .product-badge { font-size: 0.6rem; padding: 3px 8px; top: 8px; left: 8px; }
+            
+            /* 加載中字體變細淺色 */
+            .product-image, .eating-image-placeholder, .history-item { font-size: 0.75rem; color: #aaa; }
+            
+            .eating-grid { grid-template-columns: 1fr; gap: 15px; }
+            .eating-image-placeholder { aspect-ratio: 4 / 3; }
+            .eating-info { padding: 15px; }
+            .eating-info h3 { font-size: 1.2rem; }
+            .eating-info ul li { font-size: 0.9rem; }
+            
+            .history-grid { grid-template-columns: repeat(4, 1fr); overflow-x: auto; gap: 5px; }
+            .history-item img { height: 90px; }
+            
+            .cooperation-content { padding: 20px; left: 0; max-width: 100%; margin: 0 auto; gap: 20px; }
+            .cooperation-right { width: 100%; }
+            .cooperation-phone { max-width: 180px; }
+            
+            .modal-content { margin: 5% auto; padding: 15px; max-width: 95%; }
+            .modal-columns { flex-direction: column; }
+            .option-btn { min-height: 80px; padding: 10px; font-size: 0.95rem; }
+            .option-btn .info-text { font-size: 0.8rem; }
+            .confirm-btn { padding: 12px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <img src="/.netlify/images?url=/logo.jpg&w=100&q=80" alt="鮮樂樂 Logo" loading="lazy" onerror="this.style.display='none'">
+                <div>
+                    <div class="logo-text">鮮樂樂 - Macau - 大閘蟹</div>
+                    <div class="logo-sub">全澳包送，送到晚上十二點，一隻都照送，免配送費</div>
+                </div>
+            </a>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <nav id="mainNav">
+                <a href="#about">關於我們</a>
+                <a href="#products">查看套餐</a>
+                <a href="#eating-notice">進食注意</a>
+                <a href="#contact">聯絡方法</a>
+                <a href="#cooperation">商務合作</a>
+                <a href="tel:+85365560707" class="order-btn">立即訂購</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 方案二：右邊圓點導航 HTML -->
+    <div id="dot-nav">
+        <a href="#about" data-title="關於我們" class="active"></a>
+        <a href="#history" data-title="歷史海報"></a>
+        <a href="#products" data-title="查看套餐"></a>
+        <a href="#eating-notice" data-title="進食注意"></a>
+        <a href="#contact" data-title="聯絡方法"></a>
+        <a href="#cooperation" data-title="商務合作"></a>
+    </div>
+
+    <!-- 右上角分享按鈕 -->
+    <button class="floating-share-btn" onclick="openShareModal()" aria-label="分享">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+    </button>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-slide slide-1"></div>
+        <div class="hero-slide slide-2"></div>
+        <div class="hero-slide slide-3"></div>
+        <div class="hero-content">
+            <img src="/.netlify/images?url=/logo.jpg&w=400&q=80" alt="鮮樂樂" class="hero-logo" fetchpriority="high" onerror="this.style.display='none'">
+            <h1>鮮樂樂</h1>
+            <p>秋季最鮮 · 限定登場</p>
+            <div class="announcement">
+    🦀 大閘蟹"中秋"正式開賣！右方WhatsApp最新資訊群組連結：
+    <a href="https://chat.whatsapp.com/EktLfkuiiJoDHLrCbvUmCv?s=cl&p=a&mlu=4" target="_blank" rel="noopener noreferrer">按此加入群組</a>
+</div>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-gold">查看套餐</a>
+                <a href="tel:+85365560707" class="btn btn-outline">📞 立即訂購</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <div class="section-title">
+            <span>關於我們</span>
+            <h2>鮮樂樂 · 宗旨：永遠把服務放在第一位</h2>
+        </div>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>「鮮樂樂」秉持「秋季最鮮，限定登場」的理念，只挑選每個季節最優質的貨品。我們相信，真正的美味來自於對季節的尊重與等待。</p>
+                <p>每年秋季，我們嚴選優質大閘蟹，確保每隻蟹都膏滿肉實，為顧客帶來最極致的味覺享受。</p>
+                <p>與此同時，我們也提供便捷的預訂服務，讓您輕鬆享受最新鮮的美味。</p>
+                <p>創辦人由2021年起於網上銷售大閘蟹，累積豐富的經驗與人脈，為顧客提供最專業的服務。</p>
+                <p>從源頭至終端一手包辦，這個網站如是，由小白(創辦人)費了不少心血親自搭建，務求為顧客提供最佳體驗。</p>
+                <p>自2024年開通了夜間送貨服務，所以無論何時，您都能享受到我們的服務。</p>
+                <div class="about-stats">
+                    <div class="stat"><div class="number">100%</div><div class="label">品質保證</div></div>
+                    <div class="stat"><div class="number">100%</div><div class="label">服務保證</div></div>
+                    <div class="stat"><div class="number">產地</div><div class="label">源頭直送</div></div>
+                    <div class="stat"><div class="number">報關</div><div class="label">合法檢疫</div></div>
+                    <div class="stat"><div class="number">限量</div><div class="label">每週供應</div></div>
+                    <div class="stat"><div class="number">預售</div><div class="label">提前預訂</div></div>
+                </div>
+            </div>
+            <div class="about-image">
+                <div class="about-badge">秋季限定<br>大閘蟹</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 歷史海報區 -->
+    <section id="history">
+        <div class="section-title">
+            <span>歷史海報</span>
+            <h2>真實記錄・信心保證</h2>
+        </div>
+        <div class="history-grid">
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster1.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster1.jpg&w=300&q=75" alt="歷史海報1" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster2.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster2.jpg&w=300&q=75" alt="歷史海報2" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster3.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster3.jpg&w=300&q=75" alt="歷史海報3" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster4.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster4.jpg&w=300&q=75" alt="歷史海報4" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster5.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster5.jpg&w=300&q=75" alt="歷史海報5" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster6.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster6.jpg&w=300&q=75" alt="歷史海報6" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster7.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster7.jpg&w=300&q=75" alt="歷史海報7" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster8.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster8.jpg&w=300&q=75" alt="歷史海報8" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster9.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster9.jpg&w=300&q=75" alt="歷史海報9" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+            <div class="history-item" onclick="openLightbox('/.netlify/images?url=/poster10.jpg&w=600&q=75')">加載中...
+                <img src="/.netlify/images?url=/poster10.jpg&w=300&q=75" alt="歷史海報10" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+            </div>
+        </div>
+
+        <div class="visitor-counter">
+            歷史瀏覽人數： <span id="visitor-count">...</span> 人
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section id="products">
+        <div class="section-title">
+            <span>查看套餐</span>
+            <h2>全澳包送貨 "澳門、氹仔、路環" 車到人到！</h2>
+            <p style="color:#888; margin-top:5px;">二十四小時在線 · 送貨送到晚上十二點 · 一隻都照送</p>
+        </div>
+        <div class="products-grid">
+            
+            <!-- 卡1：精選套餐 -->
+            <div class="product-card">
+                <div class="product-image">加載中...
+                    <img src="/.netlify/images?url=/crab2.jpg&w=600&q=75" alt="精選套餐" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+                    <span class="product-badge">熱賣/尊享</span>
+                </div>
+                <div class="product-info">
+                    <h3>精選套餐 (餐1-6)</h3>
+                    <p>精選大閘蟹，膏豐黃滿，入口醇厚甘香，盡顯非凡品味，商務饋贈首選。</p>
+                    <div class="product-price">MOP 488 <small>/ 8隻 起</small></div>
+                    <div class="product-price">MOP 111 <small>/ 單隻 起</small></div>
+                    <div class="product-tag">#原價MOP888元 #原價÷隻數=單隻價錢</div>
+                    <div class="product-tag">#公乸配搭自選</div>
+                    <button onclick="openModal('精選套餐 (餐1-6)')" class="product-btn">點選目錄</button>
+                </div>
+            </div>
+
+            <!-- 卡2：預售套餐 -->
+            <div class="product-card">
+                <div class="product-image">加載中...
+                    <img src="/.netlify/images?url=/crab1.jpg&w=600&q=75" alt="預售套餐" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+                    <span class="product-badge">預售</span>
+                </div>
+                <div class="product-info">
+                    <h3>預售套餐 餐0</h3>
+                    <p>12月限量預訂！僅獻頂級蟹皇，重量超越常規，稀世珍品，為懂吃的您專屬預留。</p>
+                    <div class="product-price">MOP 788 <small>/ 2隻</small></div>
+                    <div class="product-price">MOP 1988 <small>/ 6隻</small></div>
+                    <div class="product-tag">#12月到貨</div>
+                    <div class="product-tag">#原價MOP 2,988元</div>
+                    <div class="product-tag">#公乸配搭自選</div>
+                    <button onclick="openModal('預售套餐 餐0')" class="product-btn">點選目錄</button>
+                </div>
+            </div>
+
+            <!-- 卡3：客戶反饋圖 -->
+            <div class="product-card">
+                <div class="product-image">加載中...
+                    <img src="/.netlify/images?url=/feedback.jpg&w=600&q=75" alt="客戶反饋圖" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+                    <span class="product-badge">互動專區</span>
+                </div>
+                <div class="product-info">
+                    <h3>客戶反饋圖</h3>
+                    <!-- 修改：更新描述文字 -->
+                    <p>👇食完影張靚相，WhatsApp 發送俾我哋，有機會獲得回贈！👇</p>
+                    <!-- 修改：更新按鈕文字並保留 WhatsApp 連結 -->
+                    <a href="https://wa.me/85365560707" target="_blank" class="product-btn">💬 WhatsApp 留言 / 發送圖片</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 進食注意 -->
+    <section id="eating-notice">
+        <div class="section-title">
+            <span>進食注意</span>
+            <h2>食得開心又放心</h2>
+        </div>
+        <div class="eating-grid">
+            <div class="eating-card">
+                <div class="eating-image-placeholder">加載中...
+                    <img src="/.netlify/images?url=/eating1.jpg&w=600&q=75" alt="進食注意" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+                </div>
+                <div class="eating-info">
+                    <h3>1) 進食注意</h3>
+                    <ul>
+                        <li><strong>驅寒暖胃：</strong>建議配搭薑茶、紫蘇葉或溫熱花雕酒一同享用，中和寒性。</li>
+                        <li><strong>四大不吃：</strong>進食前必須清除蟹腮、蟹心、蟹胃及蟹腸，不宜食用。</li>
+                        <li><strong>相沖食物：</strong>避免同時進食柿子、梨子、濃茶或生冷食物。</li>
+                        <li><strong>人群提醒：</strong>孕婦、脾胃虛寒者及高膽固醇人士建議適量進食。</li>
+                        <li><strong>新鮮保證：</strong>本店承諾死蟹包換，死蟹絕對不能食用！請盡快開箱檢查。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="eating-card">
+                <div class="eating-image-placeholder" style="position: relative; padding-top: 56.25%; background: #000;">
+                    <iframe 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        src="https://www.youtube.com/embed/cVEkzwDsal8" 
+                        title="如何清洗大閘蟹" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="eating-info">
+                    <h3>2) 如何清洗</h3>
+                    <ul>
+                        <li><strong>勿解蟹繩：</strong>防止被鉗傷，保持蟹隻生猛。</li>
+                        <li><strong>浸水吐沙：</strong>放入凍水盆浸約 10 至 15 分鐘，吐出雜質。</li>
+                        <li><strong>準備工具：</strong>預備一把乾淨嘅舊牙刷。</li>
+                        <li><strong>重點刷洗：</strong>刷洗蟹背、蟹鉗、蟹腳關節。最污糟嘅蟹肚要反轉嚟洗。</li>
+                        <li><strong>沖水瀝乾：</strong>沖走污垢後瀝乾，即可上蒸籠！</li>
+                        <li><strong>溫馨提示：</strong>發現死蟹請立即影相聯絡我哋（死蟹包換），死蟹不能食用！</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="eating-card">
+                <div class="eating-image-placeholder">加載中...
+                    <img src="/.netlify/images?url=/eating2.jpg&w=600&q=75" alt="如何煮食" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+                </div>
+                <div class="eating-info">
+                    <h3>3) 如何煮食</h3>
+                    <ul>
+                        <li><strong>清洗準備：</strong>先用刷子將大閘蟹洗刷乾淨。</li>
+                        <li><strong>水滾落鍋：</strong>大火煲至大滾，蟹肚朝上放，防止蟹黃流出。</li>
+                        <li><strong>加料去腥：</strong>蟹肚放一片薑，可加入紫蘇葉去腥驅寒。</li>
+                        <li><strong>精準計時：</strong>根據「水滾蒸煮時間表」計時，每重1兩加2分鐘（公乸一樣）。</li>
+                        <li><strong>焗一焗：</strong>關火後焗多1-2分鐘，肉質更鮮嫩。</li>
+                        <li><strong>靈魂蘸料：</strong>點薑絲加鎮江醋，完美帶出鮮甜！</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <div class="section-title">
+            <span>聯絡方法</span>
+            <h2>營業資訊</h2>
+        </div>
+        <div class="contact-grid">
+            <div>
+                <div class="social-grid">
+                    <div class="contact-item" style="grid-column: span 2;">
+                        <div class="contact-icon">📍</div>
+                        <div><h4>門市地址</h4><p>澳門田畔街21號田畔新邨地下Y鋪</p></div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">🕐</div>
+                        <div><h4>送貨時間</h4><p>15:00 - 00:00</p></div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📜</div>
+                        <div><h4>零售登記</h4><p>F0043/2026</p></div>
+                    </div>
+                    
+                    <a href="tel:+85365560707" class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div><h4>電話訂購</h4><p>+853 6556 0707</p></div>
+                    </a>
+                    
+                    <a href="https://wa.me/85365560707" target="_blank" class="contact-item">
+                        <div class="contact-icon">💬</div>
+                        <div><h4>WhatsApp</h4><p>+853 6556 0707</p></div>
+                    </a>
+                    
+                    <a href="weixin://dl/chat?FLOKLOK2023" class="contact-item">
+                        <div class="contact-icon">💚</div>
+                        <div><h4>微信 WeChat</h4><p>FLOKLOK2023</p></div>
+                    </a>
+                    
+                    <a href="https://www.instagram.com/floklok2023" target="_blank" class="contact-item">
+                        <div class="contact-icon">📸</div>
+                        <div><h4>Instagram</h4><p>@floklok2023</p></div>
+                    </a>
+                    
+                    <a href="https://www.facebook.com/FreshLokLok" target="_blank" class="contact-item">
+                        <div class="contact-icon">👍</div>
+                        <div><h4>Facebook</h4><p>鮮樂樂 Fresh Lok Lok</p></div>
+                    </a>
+                </div>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps?q=田畔街21號田畔新邨地下Y鋪&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- 商務合作 -->
+    <section id="cooperation">
+        <div class="section-title">
+            <span>商務合作</span>
+            <h2>代理、批發</h2>
+        </div>
+        <div class="cooperation-content">
+            <div class="cooperation-text">
+                <p>代理：冇最低數量要求，但有必須按要求定價，適合有接觸網上銷售經驗人士。。</p>
+                <p>批發：街市、餐廳、酒店、超市，有最低數量要求，適合本身有大量出貨渠道者。</p>
+                <p>如需商業洽談、大批量採購或長期合作，歡迎隨時與我們聯繫。</p>
+            </div>
+            
+            <div class="cooperation-right">
+                <div class="qr-box">加載中...
+                    <h4>WeChat</h4>
+                    <img src="/.netlify/images?url=/qr.jpg&w=300&q=75" alt="WeChat QR Code" loading="lazy" style="opacity:0;" onload="this.style.opacity='1';" onerror="this.style.display='none'; this.parentElement.innerText='加載中... ';">
+                </div>
+                <div class="contact-item cooperation-phone" style="justify-content: center;">
+                    <div>
+                        <h4>24小時電話查詢</h4>
+                        <p><a href="tel:+85365560707" style="color:inherit; text-decoration:none;">+853 6556 0707</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 鮮樂樂 · 樂樂集團有限公司 · 版權所有</p>
+        <p>澳門商業登記編號：96602 (SO)</p>
+        <div style="margin-top:10px;">
+            <a href="https://www.facebook.com/FreshLokLok" target="_blank">Facebook</a>
+            <a href="https://www.instagram.com/floklok2023" target="_blank">Instagram</a>
+        </div>
+    </footer>
+
+    <!-- 套餐彈窗 -->
+    <div id="packageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">選擇套餐</h3>
+            <div id="modal-container"></div>
+            
+            <div id="qty-control" style="display:none;">
+                <div class="qty-box">
+                    <button class="qty-btn" onclick="changeQty(-1)">-</button>
+                    <div class="qty-num" id="qty-display">1</div>
+                    <button class="qty-btn" onclick="changeQty(1)">+</button>
+                </div>
+                <div class="total-price">總價：<span id="total-price-display">$0</span></div>
+                <a href="javascript:void(0)" class="confirm-btn" id="confirm-wa-btn" onclick="confirmOrder()">聯絡客服落單/查詢現貨</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 相片放大彈窗 (Lightbox) -->
+    <div id="myLightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-content" id="lightboxImg">
+    </div>
+
+    <!-- 分享網頁彈窗 -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeShareModal()">&times;</span>
+            <h3>分享網頁給朋友</h3>
+            
+            <button class="option-btn" style="background-color: #3b5998; margin-top: 10px;" onclick="fbShare()">📘 分享至 Facebook</button>
+            <button class="option-btn" style="background-color: #6c757d; margin-top: 10px;" onclick="copyLink()">🔗 複製網址</button>
+            <button class="option-btn" style="background-color: #28a745; margin-top: 10px;" onclick="emailShare()">✉️ 分享至 Email</button>
+            
+            <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">*如果使用手機，建議選擇「複製網址」後，去微信或其他 App 貼上連結。</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('mainNav').classList.toggle('active');
+        }
+
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                document.getElementById('mainNav').classList.remove('active');
+                const href = link.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(href);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                        targetSection.classList.remove('section-flash');
+                        void targetSection.offsetWidth;
+                        targetSection.classList.add('section-flash');
+                        setTimeout(() => {
+                            targetSection.classList.remove('section-flash');
+                        }, 1000);
+                    }
+                }
+            });
+        });
+
+        function openShareModal() {
+            document.getElementById('shareModal').style.display = 'block';
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        function copyLink() {
+            const url = window.location.href;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('網址已複製！請去其他 App 貼上。');
+                    closeShareModal();
+                });
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('網址已複製！請去其他 App 貼上。');
+                } catch (err) {
+                    alert('無法自動複製，請手動複製網址列。');
+                }
+                document.body.removeChild(textArea);
+                closeShareModal();
+            }
+        }
+
+        function fbShare() {
+            const url = encodeURIComponent(window.location.href);
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank');
+            closeShareModal();
+        }
+
+        function emailShare() {
+            const subject = encodeURIComponent('鮮樂樂 - 季節限定大閘蟹');
+            const body = encodeURIComponent('全澳包送貨，送到晚上十二點！\n\n' + window.location.href);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+            closeShareModal();
+        }
+
+        async function fetchVisitorCount() {
+            try {
+                const response = await fetch('https://count.cab/hit/floklok');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('visitor-count').innerText = data.value || '...';
+                } else {
+                    throw new Error('API error');
+                }
+            } catch (error) {
+                document.getElementById('visitor-count').innerText = '...';
+            }
+        }
+        fetchVisitorCount();
+
+        const packageData = {
+            '預售套餐 餐0': {
+                options: [
+                    { name: '預售 788元 2隻', weight: '乸(7-8兩)公(8-9兩)', original: '#12月到貨 #原價2988元' },
+                    { name: '預售 1988元 6隻', weight: '乸(7-8兩)公(8-9兩)', original: '#12月到貨 #原價2988元' }
+                ],
+                singles: [
+                    { name: 'MOP 498 (2988÷6)', weight: '乸(7-8兩)公(8-9兩)', original: '#12月到貨 #原價2988元' }
+                ]
+            },
+            '精選套餐 (餐1-6)': {
+                options: [
+                    { name: '餐1, MOP488元8隻', weight: '乸(3.1-3.7兩)公(3.8-4.4兩)', original: '#原價888元' },
+                    { name: '餐2, MOP688元8隻', weight: '乸(3.8-4.4兩)公(4.5-5.1兩)', original: '#原價1388元' },
+                    { name: '餐3, MOP788元6隻', weight: '乸(4.5-5.1兩)公(5.2-5.8兩)', original: '#原價1788元' },
+                    { name: '餐4, MOP988元6隻', weight: '乸(5.2-5.8兩)公(5.9-6.5兩)', original: '#原價2088元' },
+                    { name: '餐5, MOP1288元6隻', weight: '乸(5.9-6.5兩)公(6.6-7.2兩)', original: '#原價2388元' },
+                    { name: '餐6, MOP1588元6隻', weight: '乸(6.6-7.2兩)公(7.2-7.8兩)', original: '#原價2588元' }
+                ],
+                singles: [
+                    { name: 'MOP 111 (888÷8)', weight: '乸(3.1-3.7兩)公(3.8-4.4兩)', original: '#原價888元' },
+                    { name: 'MOP 174 (1388÷8)', weight: '乸(3.8-4.4兩)公(4.5-5.1兩)', original: '#原價1388元' },
+                    { name: 'MOP 298 (1788÷6)', weight: '乸(4.5-5.1兩)公(5.2-5.8兩)', original: '#原價1788元' },
+                    { name: 'MOP 348 (2088÷6)', weight: '乸(5.2-5.8兩)公(5.9-6.5兩)', original: '#原價2088元' },
+                    { name: 'MOP 398 (2388÷6)', weight: '乸(5.9-6.5兩)公(6.6-7.2兩)', original: '#原價2388元' },
+                    { name: 'MOP 431 (2588÷6)', weight: '乸(6.6-7.2兩)公(7.2-7.8兩)', original: '#原價2588元' }
+                ]
+            }
+        };
+
+        let currentProduct = '';
+        let currentPackage = null;
+        let qty = 1;
+
+        function openModal(productName) {
+            currentProduct = productName;
+            currentPackage = null;
+            qty = 1;
+
+            const modal = document.getElementById('packageModal');
+            const title = document.getElementById('modalTitle');
+            const container = document.getElementById('modal-container');
+            const qtyControl = document.getElementById('qty-control');
+
+            title.textContent = productName;
+            container.innerHTML = '';
+            qtyControl.style.display = 'none';
+
+            const data = packageData[productName];
+            if (data) {
+                if (!data.singles) {
+                    const col = document.createElement('div');
+                    col.className = 'modal-column';
+                    data.options.forEach(item => {
+                        const btn = document.createElement('button');
+                        btn.className = 'option-btn';
+                        let html = item.name + '<span class="info-text">' + item.weight + '</span>';
+                        if (item.original) html += '<span class="info-text">' + item.original + '</span>';
+                        btn.innerHTML = html;
+                        btn.onclick = () => selectPackage(item);
+                        col.appendChild(btn);
+                    });
+                    container.appendChild(col);
+                } else {
+                    container.className = 'modal-columns';
+                    
+                    const colLeft = document.createElement('div');
+                    colLeft.className = 'modal-column';
+                    colLeft.innerHTML = '<div class="modal-column-title">【套餐】</div>';
+                    data.options.forEach(item => {
+                        const btn = document.createElement('button');
+                        btn.className = 'option-btn';
+                        let html = item.name + '<span class="info-text">' + item.weight + '</span>';
+                        if (item.original) html += '<span class="info-text">' + item.original + '</span>';
+                        btn.innerHTML = html;
+                        btn.onclick = () => selectPackage(item);
+                        colLeft.appendChild(btn);
+                    });
+                    container.appendChild(colLeft);
+
+                    const colRight = document.createElement('div');
+                    colRight.className = 'modal-column';
+                    colRight.innerHTML = '<div class="modal-column-title">【單隻】</div>';
+                    data.singles.forEach(item => {
+                        const btn = document.createElement('button');
+                        btn.className = 'option-btn';
+                        btn.style.backgroundColor = '#D35400'; 
+                        btn.style.color = '#fff';
+                        let html = item.name + '<span class="info-text">' + item.weight + '</span>';
+                        if (item.original) html += '<span class="info-text">' + item.original + '</span>';
+                        btn.innerHTML = html;
+                        btn.onclick = () => selectPackage(item);
+                        colRight.appendChild(btn);
+                    });
+                    container.appendChild(colRight);
+                }
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function selectPackage(item) {
+            currentPackage = item;
+            qty = 1;
+
+            document.getElementById('qty-control').style.display = 'block';
+            document.getElementById('qty-display').textContent = qty;
+            let price = item.price ? item.price : 0;
+            if (!price) {
+                const match = item.name.match(/MOP\s*(\d+)/);
+                if (match) price = parseInt(match[1]);
+            }
+            document.getElementById('total-price-display').textContent = '$' + (price * qty);
+            document.getElementById('confirm-wa-btn').textContent = '聯絡客服落單/查詢現貨';
+        }
+
+        function changeQty(delta) {
+            if (!currentPackage) return;
+            qty += delta;
+            if (qty < 1) qty = 1;
+            document.getElementById('qty-display').textContent = qty;
+            let price = currentPackage.price ? currentPackage.price : 0;
+            if (!price) {
+                const match = currentPackage.name.match(/MOP\s*(\d+)/);
+                if (match) price = parseInt(match[1]);
+            }
+            document.getElementById('total-price-display').textContent = '$' + (price * qty);
+        }
+
+                function confirmOrder() {
+            if (!currentPackage) return;
+            
+            // 獲取單價
+            let price = currentPackage.price ? currentPackage.price : 0;
+            if (!price) {
+                const match = currentPackage.name.match(/MOP\s*(\d+)/);
+                if (match) price = parseInt(match[1]);
+            }
+            
+            // 計算總價
+            const totalPrice = price * qty;
+
+            // 跳轉到確認頁並帶上總價
+            window.location.href = 'payment-confirm.html?price=' + totalPrice;
+            
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('packageModal').style.display = 'none';
+            document.getElementById('modal-container').className = ''; 
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('packageModal');
+            const shareModal = document.getElementById('shareModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+                document.getElementById('modal-container').className = '';
+            }
+            if (event.target == shareModal) {
+                shareModal.style.display = 'none';
+            }
+        }
+
+        function openLightbox(src) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('myLightbox').style.display = 'block';
+        }
+
+        function closeLightbox() {
+            document.getElementById('myLightbox').style.display = 'none';
+        }
+
+        document.getElementById('myLightbox').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeLightbox();
+            }
+        });
+
+        const sections = document.querySelectorAll('section[id]');
+        const navLi = document.querySelectorAll('#dot-nav a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLi.forEach(li => {
+                li.classList.remove('active');
+                if (li.getAttribute('href') === '#' + current) {
+                    li.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

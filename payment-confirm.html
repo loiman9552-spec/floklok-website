@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單資料確認 - 鮮樂樂</title>
+    
+    <!-- Meta Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1275893540333020'); 
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=1275893540333020&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BQ7DG6RQ53"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-BQ7DG6RQ53');
+    </script>
+    <!-- End Google Analytics 4 -->
+    
+    <style>
+        /* 全局設定：將 body 內所有文字設為粗體 */
+        body { font-family: 'Microsoft JhengHei', sans-serif; background-color: #FDF6F0; color: #1A1A1A; text-align: center; padding: 20px; font-weight: bold; }
+        
+        /* 手機版預設尺寸 */
+        .container { max-width: 420px; width: 100%; margin: 20px auto; background: #fff; border-radius: 20px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); box-sizing: border-box; }
+        h1 { color: #C41E3A; font-size: 1.3rem; margin-bottom: 15px; line-height: 1.5; font-weight: bold; }
+        p { font-size: 0.9rem; color: #555; margin-bottom: 8px; line-height: 1.4; font-weight: bold; }
+        
+        /* 五個按鈕文字完全置中 */
+        .btn { display: flex; justify-content: center; align-items: center; background: #fff; border: 3px solid #FF8C00; color: #C41E3A; padding: 10px 15px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 0.9rem; margin-bottom: 12px; transition: 0.2s; box-sizing: border-box; text-align: center; line-height: 1.3; }
+        .btn:hover { background: #FFF8F0; }
+        
+        .btn-form { width: 100%; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .btn-grid .btn { margin-bottom: 0; }
+        
+        /* 返回主頁按鈕 */
+        .btn-outline { border-color: #C41E3A; margin-top: 12px; }
+        .btn-outline:hover { background: #fcebe9; }
+
+        /* 網頁版放大設定 */
+        @media (min-width: 768px) {
+            .container { max-width: 600px; padding: 50px; }
+            h1 { font-size: 2rem; margin-bottom: 20px; }
+            p { font-size: 1.2rem; margin-bottom: 10px; }
+            .btn { font-size: 1.2rem; padding: 18px 20px; border-radius: 35px; margin-bottom: 15px; }
+            .btn-grid { gap: 15px; }
+        }
+
+        /* ========== 新增：QR Code 彈窗樣式 ========== */
+        .qr-modal {
+            display: none; /* 預設隱藏 */
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7); /* 半透明黑色背景 */
+        }
+        .qr-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            position: relative;
+        }
+        .qr-content img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .qr-content p {
+            margin: 15px 0 0 0;
+            color: #C41E3A;
+            font-size: 1.1rem;
+        }
+        .qr-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .qr-close:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🙏感謝客戶點擊購買！<br>🙏多謝支持小店！</h1>
+        
+        <p>👇下方有聯絡客服「按鈕」👇</p>
+        <p>點擊後與客服進行落單及付款。</p>
+        
+        <!-- 第一步：填表 -->
+        <a href="https://forms.gle/4TMTd2k3ZDjQo6U16" class="btn btn-form" target="_blank">👇填寫確認訂單資料 (建議直接叫客服幫你填)👇</a>
+        
+        <!-- 第二步：聯絡客服 -->
+        <div class="btn-grid">
+            <a href="https://wa.me/85365560707" class="btn" target="_blank">WhatsApp</a>
+            <a href="https://m.me/FreshLokLok?ref=payment_confirm" class="btn" target="_blank">Facebook Messenger</a>
+            
+            <!-- WeChat 改為呼叫彈出 QR Code 的函數 -->
+            <a href="javascript:void(0);" class="btn" onclick="openQrModal()">WeChat ID: FLOKLOK2023</a>
+            
+            <a href="tel:+85365560707" class="btn">電話：<br>65560707</a>
+        </div>
+        
+        <!-- 返回主頁 -->
+        <a href="index.html" class="btn btn-outline">返回主頁</a>
+    </div>
+
+    <!-- ========== 新增：QR Code 彈窗 HTML 結構 ========== -->
+    <div id="qrModal" class="qr-modal">
+        <div class="qr-content">
+            <span class="qr-close" onclick="closeQrModal()">&times;</span>
+            <!-- 圖片路徑係同一個資料夾，請確保 qr.jpg 有被上傳 -->
+            <img src="qr.jpg" alt="WeChat QR Code">
+            <p>請用微信掃描以上 QR Code 添加客服</p>
+        </div>
+    </div>
+
+    <script>
+        // ========== 新增：開關 QR Code 彈窗的函數 ==========
+        function openQrModal() {
+            document.getElementById('qrModal').style.display = 'block';
+        }
+
+        function closeQrModal() {
+            document.getElementById('qrModal').style.display = 'none';
+        }
+
+        // 點擊黑色背景都可以關閉彈窗
+        document.getElementById('qrModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeQrModal();
+            }
+        });
+
+        // Pixel 記錄代碼
+        const urlParams = new URLSearchParams(window.location.search);
+        const priceValue = urlParams.get('price');
+        const purchaseValue = priceValue ? parseFloat(priceValue) : 0;
+
+        if (typeof fbq === 'function') {
+            fbq('track', 'Purchase', {
+                value: purchaseValue,
+                currency: 'MOP',
+                content_type: 'product'
+            });
+        }
+    </script>
+</body>
+</html>
