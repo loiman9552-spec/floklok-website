@@ -22,3 +22,11 @@ collections:
               - {label: "重量/規格", name: "weight", widget: "string"}
               - {label: "優惠標籤", name: "original", widget: "string", required: false}
               - {label: "價錢 (數字)", name: "price", widget: "number"}
+          - label: "預售套餐"
+            name: "presale_packages"
+            widget: "list"
+            fields:
+              - {label: "標題", name: "title", widget: "string"}
+              - {label: "重量/規格", name: "weight", widget: "string"}
+              - {label: "優惠標籤", name: "original", widget: "string", required: false}
+              - {label: "價錢 (數字)", name: "price", widget: "number"}
