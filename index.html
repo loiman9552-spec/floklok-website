@@ -843,35 +843,67 @@
         }
         fetchVisitorCount();
 
-        const packageData = {
-            '預售套餐 餐0': {
-                options: [
-                    { name: '預售 788元 2隻', weight: '乸(7-8兩)公(8-9兩)', original: '#12月到貨 #原價2988元' },
-                    { name: '預售 1988元 6隻', weight: '乸(7-8兩)公(8-9兩)', original: '#12月到貨 #原價2988元' }
-                ],
-                singles: [
-                    { name: 'MOP 498 (2988÷6)', weight: '乸(7-8兩)公(8-9兩)', original: '#12月到貨 #原價2988元' }
-                ]
-            },
-            '精選套餐 (餐1-6)': {
-                options: [
-                    { name: '餐1, MOP488元8隻', weight: '乸(3.1-3.7兩)公(3.8-4.4兩)', original: '#原價888元' },
-                    { name: '餐2, MOP688元8隻', weight: '乸(3.8-4.4兩)公(4.5-5.1兩)', original: '#原價1388元' },
-                    { name: '餐3, MOP788元6隻', weight: '乸(4.5-5.1兩)公(5.2-5.8兩)', original: '#原價1788元' },
-                    { name: '餐4, MOP988元6隻', weight: '乸(5.2-5.8兩)公(5.9-6.5兩)', original: '#原價2088元' },
-                    { name: '餐5, MOP1288元6隻', weight: '乸(5.9-6.5兩)公(6.6-7.2兩)', original: '#原價2388元' },
-                    { name: '餐6, MOP1588元6隻', weight: '乸(6.6-7.2兩)公(7.2-7.8兩)', original: '#原價2588元' }
-                ],
-                singles: [
-                    { name: 'MOP 111 (888÷8)', weight: '乸(3.1-3.7兩)公(3.8-4.4兩)', original: '#原價888元' },
-                    { name: 'MOP 174 (1388÷8)', weight: '乸(3.8-4.4兩)公(4.5-5.1兩)', original: '#原價1388元' },
-                    { name: 'MOP 298 (1788÷6)', weight: '乸(4.5-5.1兩)公(5.2-5.8兩)', original: '#原價1788元' },
-                    { name: 'MOP 348 (2088÷6)', weight: '乸(5.2-5.8兩)公(5.9-6.5兩)', original: '#原價2088元' },
-                    { name: 'MOP 398 (2388÷6)', weight: '乸(5.9-6.5兩)公(6.6-7.2兩)', original: '#原價2388元' },
-                    { name: 'MOP 431 (2588÷6)', weight: '乸(6.6-7.2兩)公(7.2-7.8兩)', original: '#原價2588元' }
-                ]
+                let packageData = {};
+
+        async function loadPackageData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                // 1. 建立精選套餐
+                if (data.premium_packages) {
+                    packageData['精選套餐 (餐1-6)'] = {
+                        options: data.premium_packages.map(item => ({
+                            name: item.title,
+                            weight: item.weight,
+                            original: item.original,
+                            price: item.price
+                        })),
+                        singles: data.premium_packages.map(item => {
+                            const qtyMatch = item.title.match(/(\d+)隻/);
+                            const qty = qtyMatch ? parseInt(qtyMatch[1]) : 1;
+                            const singlePrice = Math.round(item.price / qty);
+                            return {
+                                name: `MOP ${singlePrice} (單隻)`,
+                                weight: item.weight,
+                                original: item.original,
+                                price: singlePrice
+                            };
+                        })
+                    };
+                }
+
+                // 2. 建立預售套餐
+                if (data.presale_packages) {
+                    packageData['預售套餐 餐0'] = {
+                        options: data.presale_packages.map(item => ({
+                            name: item.title,
+                            weight: item.weight,
+                            original: item.original,
+                            price: item.price
+                        })),
+                        singles: data.presale_packages.map(item => {
+                            const qtyMatch = item.title.match(/(\d+)隻/);
+                            const qty = qtyMatch ? parseInt(qtyMatch[1]) : 1;
+                            const singlePrice = Math.round(item.price / qty);
+                            return {
+                                name: `MOP ${singlePrice} (單隻)`,
+                                weight: item.weight,
+                                original: item.original,
+                                price: singlePrice
+                            };
+                        })
+                    };
+                }
+                
+            } catch (error) {
+                console.error('載入套餐資料失敗:', error);
+                alert('載入資料失敗，請刷新頁面重試。');
             }
-        };
+        }
+
+        // 頁面載入時執行
+        loadPackageData();
 
         let currentProduct = '';
         let currentPackage = null;
