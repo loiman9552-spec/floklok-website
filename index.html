@@ -15,6 +15,24 @@
       gtag('config', 'G-BQ7DG6RQ53');
     </script>
     <!-- End Google Analytics 4 -->
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1275893540333020'); 
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=1275893540333020&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
     
     <style>
         /* ---------- 方案二：右邊圓點導航 CSS ---------- */
@@ -550,9 +568,7 @@
                 </div>
                 <div class="product-info">
                     <h3>客戶反饋圖</h3>
-                    <!-- 修改：更新描述文字 -->
                     <p>👇食完影張靚相，WhatsApp 發送俾我哋，有機會獲得回贈！👇</p>
-                    <!-- 修改：更新按鈕文字並保留 WhatsApp 連結 -->
                     <a href="https://wa.me/85365560707" target="_blank" class="product-btn">💬 WhatsApp 留言 / 發送圖片</a>
                 </div>
             </div>
@@ -843,7 +859,7 @@
         }
         fetchVisitorCount();
 
-                let packageData = {};
+        let packageData = {};
 
         async function loadPackageData() {
             try {
