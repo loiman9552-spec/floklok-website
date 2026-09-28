@@ -532,11 +532,11 @@
                     <span class="product-badge">熱賣/尊享</span>
                 </div>
                 <div class="product-info">
-                    <h3>精選套餐 (餐1-6)</h3>
+                    <h3 id="premium-card-title">精選套餐 (餐1-6)</h3>
                     <p>精選大閘蟹，膏豐黃滿，入口醇厚甘香，盡顯非凡品味，商務饋贈首選。</p>
-                    <div class="product-price">MOP 488 <small>/ 8隻 起</small></div>
-                    <div class="product-price">MOP 111 <small>/ 單隻 起</small></div>
-                    <div class="product-tag">#原價MOP888元 #原價÷隻數=單隻價錢</div>
+                    <div class="product-price" id="premium-card-price1">MOP 488 <small>/ 8隻 起</small></div>
+                    <div class="product-price" id="premium-card-price2">MOP 111 <small>/ 單隻 起</small></div>
+                    <div class="product-tag" id="premium-card-tag1">#原價MOP888元 #原價÷隻數=單隻價錢</div>
                     <div class="product-tag">#公乸配搭自選</div>
                     <button onclick="openModal('精選套餐 (餐1-6)')" class="product-btn">點選目錄</button>
                 </div>
@@ -549,11 +549,11 @@
                     <span class="product-badge">預售</span>
                 </div>
                 <div class="product-info">
-                    <h3>預售套餐 餐0</h3>
+                    <h3 id="presale-card-title">預售套餐 餐0</h3>
                     <p>12月限量預訂！僅獻頂級蟹皇，重量超越常規，稀世珍品，為懂吃的您專屬預留。</p>
-                    <div class="product-price">MOP 788 <small>/ 2隻</small></div>
-                    <div class="product-price">MOP 1988 <small>/ 6隻</small></div>
-                    <div class="product-tag">#12月到貨</div>
+                    <div class="product-price" id="presale-card-price1">MOP 788 <small>/ 2隻</small></div>
+                    <div class="product-price" id="presale-card-price2">MOP 1988 <small>/ 6隻</small></div>
+                    <div class="product-tag" id="presale-card-tag1">#12月到貨</div>
                     <div class="product-tag">#原價MOP 2,988元</div>
                     <div class="product-tag">#公乸配搭自選</div>
                     <button onclick="openModal('預售套餐 餐0')" class="product-btn">點選目錄</button>
@@ -911,10 +911,55 @@
                         })
                     };
                 }
+
+                // 3. 【方案B核心】動態更新前端卡片文字
+                updateProductCards(data.premium_packages, data.presale_packages);
                 
             } catch (error) {
                 console.error('載入套餐資料失敗:', error);
-                alert('載入資料失敗，請刷新頁面重試。');
+                // alert('載入資料失敗，請刷新頁面重試。'); // 唔好彈 Alert 影響用戶體驗
+            }
+        }
+
+        // ==========================================
+        // 【方案B核心】動態更新前端卡片文字
+        // ==========================================
+        function updateProductCards(premium, presale) {
+            // 更新精選套餐卡片
+            if (premium && premium.length > 0) {
+                // 找出最低價格嘅套餐，作為「起」價
+                let minItem = premium.reduce((min, p) => p.price < min.price ? p : min, premium[0]);
+                let qtyMatch = minItem.title.match(/(\d+)隻/);
+                let qty = qtyMatch ? parseInt(qtyMatch[1]) : 8; // 默認8隻
+                let minSinglePrice = Math.round(minItem.price / qty);
+
+                let titleEl = document.getElementById('premium-card-title');
+                let price1El = document.getElementById('premium-card-price1');
+                let price2El = document.getElementById('premium-card-price2');
+                let tagEl = document.getElementById('premium-card-tag1');
+
+                if (titleEl) titleEl.innerText = `精選套餐 (餐1-${premium.length})`;
+                if (price1El) price1El.innerHTML = `MOP ${minItem.price} <small>/ ${qty}隻 起</small>`;
+                if (price2El) price2El.innerHTML = `MOP ${minSinglePrice} <small>/ 單隻 起</small>`;
+                if (tagEl && minItem.original) tagEl.innerText = minItem.original;
+            }
+
+            // 更新預售套餐卡片
+            if (presale && presale.length > 0) {
+                let minItem = presale.reduce((min, p) => p.price < min.price ? p : min, presale[0]);
+                let qtyMatch = minItem.title.match(/(\d+)隻/);
+                let qty = qtyMatch ? parseInt(qtyMatch[1]) : 2; // 默認2隻
+                let minSinglePrice = Math.round(minItem.price / qty);
+
+                let titleEl = document.getElementById('presale-card-title');
+                let price1El = document.getElementById('presale-card-price1');
+                let price2El = document.getElementById('presale-card-price2');
+                let tagEl = document.getElementById('presale-card-tag1');
+
+                if (titleEl) titleEl.innerText = `預售套餐 餐0`;
+                if (price1El) price1El.innerHTML = `MOP ${minItem.price} <small>/ ${qty}隻</small>`;
+                if (price2El) price2El.innerHTML = `MOP ${minSinglePrice} <small>/ 單隻</small>`;
+                if (tagEl && minItem.original) tagEl.innerText = minItem.original;
             }
         }
 
@@ -1020,20 +1065,17 @@
             document.getElementById('total-price-display').textContent = '$' + (price * qty);
         }
 
-                function confirmOrder() {
+        function confirmOrder() {
             if (!currentPackage) return;
             
-            // 獲取單價
             let price = currentPackage.price ? currentPackage.price : 0;
             if (!price) {
                 const match = currentPackage.name.match(/MOP\s*(\d+)/);
                 if (match) price = parseInt(match[1]);
             }
             
-            // 計算總價
             const totalPrice = price * qty;
 
-            // 跳轉到確認頁並帶上總價
             window.location.href = 'payment-confirm.html?price=' + totalPrice;
             
             closeModal();
@@ -1087,6 +1129,34 @@
                     li.classList.add('active');
                 }
             });
+        });
+
+        // ==========================================
+        // 【環境自動檢測】本機測試時，自動還原 Netlify 圖片路徑
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", function() {
+            const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.protocol === 'file:';
+            
+            if (isLocal) {
+                // 1. 處理 <img> 標籤
+                document.querySelectorAll('img').forEach(img => {
+                    const src = img.getAttribute('src');
+                    if (src && src.includes('.netlify/images?url=')) {
+                        const urlParams = new URLSearchParams(src.split('?')[1]);
+                        const originalUrl = urlParams.get('url');
+                        if (originalUrl) img.src = originalUrl;
+                    }
+                });
+
+                // 2. 處理 Hero 背景輪播圖 (slide-1, slide-2, slide-3)
+                const localStyle = document.createElement('style');
+                localStyle.innerHTML = `
+                    .slide-1 { background-image: url('/slide1.jpg') !important; }
+                    .slide-2 { background-image: url('/slide2.jpg') !important; }
+                    .slide-3 { background-image: url('/slide3.jpg') !important; }
+                `;
+                document.head.appendChild(localStyle);
+            }
         });
     </script>
 </body>
