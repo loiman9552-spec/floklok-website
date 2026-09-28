@@ -33,144 +33,336 @@
     </script>
     <!-- End Google Analytics 4 -->
     
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
-        /* 全局設定：將 body 內所有文字設為粗體 */
         body { font-family: 'Microsoft JhengHei', sans-serif; background-color: #FDF6F0; color: #1A1A1A; text-align: center; padding: 20px; font-weight: bold; }
         
-        /* 手機版預設尺寸 */
         .container { max-width: 420px; width: 100%; margin: 20px auto; background: #fff; border-radius: 20px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); box-sizing: border-box; }
         h1 { color: #C41E3A; font-size: 1.3rem; margin-bottom: 15px; line-height: 1.5; font-weight: bold; }
         p { font-size: 0.9rem; color: #555; margin-bottom: 8px; line-height: 1.4; font-weight: bold; }
         
-        /* 五個按鈕文字完全置中 */
-        .btn { display: flex; justify-content: center; align-items: center; background: #fff; border: 3px solid #FF8C00; color: #C41E3A; padding: 10px 15px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 0.9rem; margin-bottom: 12px; transition: 0.2s; box-sizing: border-box; text-align: center; line-height: 1.3; }
-        .btn:hover { background: #FFF8F0; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #C41E3A; margin-bottom: 5px; font-weight: bold; }
+        .btn-note { background: #FF8C00; color: #fff; border: none; border-radius: 10px; padding: 2px 8px; font-size: 0.7rem; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-note:hover { background: #C41E3A; }
         
-        .btn-form { width: 100%; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px 15px; border: 2px solid #FF8C00; border-radius: 15px; font-size: 0.9rem; font-family: inherit; font-weight: bold; box-sizing: border-box; outline: none; background: #fff; color: #1A1A1A;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #C41E3A; box-shadow: 0 0 5px rgba(196, 30, 58, 0.3); }
+        .form-group select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C41E3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 15px center; background-size: 15px; }
+        
+        /* 可補充輸入框嘅樣式 */
+        .note-box { margin-top: 8px; display: none; animation: fadeIn 0.3s; }
+        .note-box input { border: 2px dashed #FF8C00; background: #FFF8F0; font-size: 0.85rem; padding: 10px 12px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .btn { display: flex; justify-content: center; align-items: center; background: #fff; border: 3px solid #FF8C00; color: #C41E3A; padding: 10px 15px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 0.9rem; margin-bottom: 12px; transition: 0.2s; box-sizing: border-box; text-align: center; line-height: 1.3; cursor: pointer; width: 100%; }
+        .btn:hover { background: #FFF8F0; }
+        .btn-submit { background: #C41E3A; color: #fff; border: none; font-size: 1rem; padding: 15px; margin-top: 10px; }
+        .btn-submit:hover { background: #8B0000; }
+        
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .btn-grid .btn { margin-bottom: 0; }
         
-        /* 返回主頁按鈕 */
         .btn-outline { border-color: #C41E3A; margin-top: 12px; }
         .btn-outline:hover { background: #fcebe9; }
 
-        /* 網頁版放大設定 */
         @media (min-width: 768px) {
             .container { max-width: 600px; padding: 50px; }
             h1 { font-size: 2rem; margin-bottom: 20px; }
             p { font-size: 1.2rem; margin-bottom: 10px; }
             .btn { font-size: 1.2rem; padding: 18px 20px; border-radius: 35px; margin-bottom: 15px; }
             .btn-grid { gap: 15px; }
+            .form-group label { font-size: 1rem; }
+            .form-group input, .form-group select, .form-group textarea { font-size: 1rem; padding: 15px; }
+            .note-box input { font-size: 1rem; padding: 15px; }
         }
 
-        /* ========== 新增：QR Code 彈窗樣式 ========== */
-        .qr-modal {
-            display: none; /* 預設隱藏 */
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.7); /* 半透明黑色背景 */
+        /* 自訂彈窗樣式 */
+        .modal {
+            display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8);
         }
-        .qr-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 20px;
-            width: 80%;
-            max-width: 300px;
-            text-align: center;
-            position: relative;
+        #qrModal { z-index: 10005; }
+        .modal-content {
+            background-color: #fff; margin: 5% auto; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; position: relative; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .qr-content img {
-            width: 100%;
-            border-radius: 10px;
-        }
-        .qr-content p {
-            margin: 15px 0 0 0;
-            color: #C41E3A;
-            font-size: 1.1rem;
-        }
-        .qr-close {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .qr-close:hover {
-            color: #000;
-        }
+        .modal-title { color: #C41E3A; font-size: 1.2rem; margin-bottom: 15px; border-bottom: 2px solid #FF8C00; padding-bottom: 10px; }
+        .summary-box { background: #FDF6F0; border: 2px solid #FF8C00; border-radius: 15px; padding: 15px; text-align: left; font-size: 0.9rem; line-height: 1.6; margin-bottom: 15px; }
+        .summary-box span { color: #C41E3A; font-weight: bold; }
+        .payment-section { margin-top: 15px; }
+        .payment-section p { margin-bottom: 10px; font-size: 0.9rem; color: #555; }
+        .qr-images { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .qr-images div { flex: 1; text-align: center; }
+        .qr-images img { width: 100%; max-width: 120px; border-radius: 10px; border: 1px solid #eee; }
+        .qr-images p { font-size: 0.8rem; margin-top: 5px; color: #1A1A1A; line-height: 1.3; }
+        .instruction { font-size: 0.9rem; color: #C41E3A; background: #fff3f3; padding: 10px; border-radius: 10px; margin-top: 10px; border: 1px solid #ffcccc; text-align: left; line-height: 1.6; }
+        .instruction br { display: block; margin: 5px 0; content: ""; }
+        
+        .close-btn { background: #C41E3A; color: #fff; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; }
+        .close-btn:hover { background: #8B0000; }
+
+        .modal .btn-grid { margin-top: 15px; gap: 8px; }
+        .modal .btn { font-size: 0.8rem; padding: 8px 10px; margin-bottom: 0; }
+        
+        .qr-close { position: absolute; top: 10px; right: 20px; color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .qr-close:hover { color: #000; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🙏感謝客戶點擊購買！<br>🙏多謝支持小店！</h1>
         
-        <p>👇下方有聯絡客服「按鈕」👇</p>
-        <p>點擊後與客服進行落單及付款。</p>
+        <p>👇請填寫以下送貨資料👇</p>
+        <p>填完撳「提交」，系統會記錄資料，請截圖發送給客服。</p>
         
-        <!-- 第一步：填表 -->
-        <a href="https://forms.gle/4TMTd2k3ZDjQo6U16" class="btn btn-form" target="_blank">👇填寫確認訂單資料 (建議直接叫客服幫你填)👇</a>
-        
-        <!-- 第二步：聯絡客服 -->
-        <div class="btn-grid">
-            <a href="https://wa.me/85365560707" class="btn" target="_blank">WhatsApp</a>
-            <a href="https://m.me/FreshLokLok?ref=payment_confirm" class="btn" target="_blank">Facebook Messenger</a>
+        <form id="orderForm" onsubmit="submitOrder(event)">
+            <div class="form-group">
+                <label for="name">收貨人姓名 *</label>
+                <input type="text" id="name" required placeholder="例：鮮樂樂">
+            </div>
+            <div class="form-group">
+                <label for="phone">聯絡電話 *</label>
+                <input type="tel" id="phone" required placeholder="例：65560707">
+            </div>
             
-            <!-- WeChat 改為呼叫彈出 QR Code 的函數 -->
-            <a href="javascript:void(0);" class="btn" onclick="openQrModal()">WeChat ID: FLOKLOK2023</a>
+            <div class="form-group">
+                <label for="address">送貨地址 * <button type="button" class="btn-note" onclick="toggleNote('addressNote')">可補充</button></label>
+                <input type="text" id="address" required placeholder="例：澳門田畔街21號田畔新邨地下Y鋪">
+                <div id="addressNote" class="note-box">
+                    <input type="text" id="addressNoteInput" placeholder="例：特別要求 / 特別注意">
+                </div>
+            </div>
             
-            <a href="tel:+85365560707" class="btn">電話：<br>65560707</a>
-        </div>
+            <div class="form-group">
+                <label for="package">選擇套餐 * <button type="button" class="btn-note" onclick="toggleNote('packageNote')">可補充</button></label>
+                <select id="package" required>
+                    <option value="488">餐1：MOP 488 / 8隻 (乸 3.1-3.7兩)</option>
+                    <option value="688">餐2：MOP 688 / 8隻 (乸 3.8-4.4兩)</option>
+                </select>
+                <div id="packageNote" class="note-box">
+                    <input type="text" id="packageNoteInput" placeholder="如：(總數為8隻) 3公 5乸；(總數為6隻) 5公 1乸。#自選公乸">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">送貨日期 *</label>
+                <input type="date" id="date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="time">送貨時間 * <button type="button" class="btn-note" onclick="toggleNote('timeNote')">可補充</button></label>
+                <select id="time" required>
+                    <option value="15:00-18:00">下午 3:00 - 6:00</option>
+                    <option value="18:00-21:00">晚上 6:00 - 9:00</option>
+                    <option value="21:00-00:00">晚上 9:00 - 12:00</option>
+                </select>
+                <div id="timeNote" class="note-box">
+                    <input type="text" id="timeNoteInput" placeholder="例：預計45分鐘，15:15-16:00 / 幾點前有人 / 幾點後有人">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="remark">備註</label>
+                <input type="text" id="remark" placeholder="例：代蒸 / 需要多少份工具">
+            </div>
+            
+            <button type="submit" class="btn btn-submit">✅ 提交並截圖</button>
+        </form>
         
-        <!-- 返回主頁 -->
-        <a href="index.html" class="btn btn-outline">返回主頁</a>
+        <a href="https://floklok2023.com/" class="btn btn-outline" style="margin-top: 20px;">返回主頁</a>
     </div>
 
-    <!-- ========== 新增：QR Code 彈窗 HTML 結構 ========== -->
-    <div id="qrModal" class="qr-modal">
-        <div class="qr-content">
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
             <span class="qr-close" onclick="closeQrModal()">&times;</span>
-            <!-- 圖片路徑係同一個資料夾，請確保 qr.jpg 有被上傳 -->
-            <img src="qr.jpg" alt="WeChat QR Code">
+            <img src="qr.jpg" alt="WeChat QR Code" style="width: 100%; max-width: 200px; border-radius: 10px;">
             <p>請用微信掃描以上 QR Code 添加客服</p>
         </div>
     </div>
 
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">✅ 提醒客戶截圖</div>
+            
+            <div class="summary-box" id="summaryContent">
+                <!-- 資料由 JavaScript 填入 -->
+            </div>
+            
+            <div class="payment-section">
+                <p>請透過以下方式支付：</p>
+                <div class="qr-images">
+                    <div>
+                        <img src="boc.jpg" alt="中銀轉帳 QR Code">
+                        <p><strong>中銀轉帳</strong><br>(帳戶名稱：鮮樂樂)</p>
+                    </div>
+                    <div>
+                        <img src="mpay.jpg" alt="Mpay 轉帳 QR Code">
+                        <p><strong>Mpay 轉帳</strong><br>(帳戶名稱：樂樂集團有限公司 - 鮮樂樂)</p>
+                    </div>
+                </div>
+                <div class="instruction">
+                    <p style="text-align: center; font-weight: bold; font-style: italic; margin-bottom: 5px;">可以與客服確認訂單資料，<br>再進行付款，但請記得「截圖」！</p>
+                    <br>
+                    中銀、mpay（最好中銀🙏）號碼：(+853) 65560707<br>
+                    「訂金為訂單一半」 或 「全款支付」<br>
+                    * 亦可透過掃上方公司二維碼進行付款。<br>
+                    完成付款後請「截圖」此頁面！並將「訂單資料」及「付款截圖」發送給客服🙏。
+                    <p style="text-align: center; font-weight: bold; margin-top: 8px;">（可直接點擊下方客服聯絡按鈕）</p>
+                </div>
+                
+                <div class="btn-grid">
+                    <a href="https://wa.me/85365560707" class="btn" target="_blank">WhatsApp</a>
+                    <a href="https://m.me/FreshLokLok?ref=payment_confirm" class="btn" target="_blank">Messenger</a>
+                    <a href="javascript:void(0);" class="btn" onclick="openQrModal()">WeChat</a>
+                    <a href="tel:+85365560707" class="btn">電話</a>
+                </div>
+            </div>
+            
+            <button class="close-btn" onclick="closeSuccessModal()">確定</button>
+        </div>
+    </div>
+
     <script>
-        // ========== 新增：開關 QR Code 彈窗的函數 ==========
-        function openQrModal() {
-            document.getElementById('qrModal').style.display = 'block';
+        // ==========================================
+        // 1. 初始化 Supabase (已換回舊版 anon key，解決 401 錯誤)
+        // ==========================================
+        const supabaseUrl = 'https://pnkyupjgxpizwwdhohyi.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBua3l1cGpneHBpend3ZGhvaHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzMTYxOTgsImV4cCI6MjEwNDg5MjE5OH0.om0OYJbu0LCSteVCbmxEAVlgiU9IJrdI7Njo3NRTOsU';
+        
+        let supabaseClient = null;
+        if (window.supabase) {
+            supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+        } else {
+            console.warn('Supabase 套件載入失敗，將跳過資料庫寫入。');
         }
 
-        function closeQrModal() {
-            document.getElementById('qrModal').style.display = 'none';
+        function openQrModal() { 
+            document.getElementById('qrModal').style.display = 'block'; 
         }
-
-        // 點擊黑色背景都可以關閉彈窗
+        function closeQrModal() { 
+            document.getElementById('qrModal').style.display = 'none'; 
+        }
         document.getElementById('qrModal').addEventListener('click', function(event) {
-            if (event.target === this) {
-                closeQrModal();
-            }
+            if (event.target === this) { closeQrModal(); }
         });
 
-        // Pixel 記錄代碼
-        const urlParams = new URLSearchParams(window.location.search);
-        const priceValue = urlParams.get('price');
-        const purchaseValue = priceValue ? parseFloat(priceValue) : 0;
+        function closeSuccessModal() { 
+            document.getElementById('successModal').style.display = 'none'; 
+        }
 
-        if (typeof fbq === 'function') {
-            fbq('track', 'Purchase', {
-                value: purchaseValue,
-                currency: 'MOP',
-                content_type: 'product'
-            });
+        function toggleNote(noteId) {
+            const noteBox = document.getElementById(noteId);
+            if (noteBox.style.display === 'none' || noteBox.style.display === '') {
+                noteBox.style.display = 'block';
+            } else {
+                noteBox.style.display = 'none';
+            }
+        }
+
+        function setDateLimits() {
+            const today = new Date();
+            const formatDate = (date) => {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            };
+            const minDate = formatDate(today);
+            const maxDateObj = new Date(today);
+            maxDateObj.setDate(today.getDate() + 30);
+            const maxDate = formatDate(maxDateObj);
+            const dateInput = document.getElementById('date');
+            if (dateInput) {
+                dateInput.min = minDate;
+                dateInput.max = maxDate;
+            }
+        }
+        window.addEventListener('DOMContentLoaded', setDateLimits);
+
+        // ==========================================
+        // 提交訂單（先彈窗，後寫入數據庫）
+        // ==========================================
+        async function submitOrder(event) {
+            // 第一時間阻止網頁刷新！
+            event.preventDefault();
+
+            // 1. 獲取表單資料
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const addressNote = document.getElementById('addressNoteInput').value.trim();
+            const packageSelect = document.getElementById('package');
+            const packageText = packageSelect.options[packageSelect.selectedIndex].text;
+            const packageValue = packageSelect.value;
+            const packageNote = document.getElementById('packageNoteInput').value.trim();
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const timeNote = document.getElementById('timeNoteInput').value.trim();
+            const remark = document.getElementById('remark').value.trim();
+
+            // 2. 將資料填入彈窗
+            let summaryHTML = `
+                <div>姓名：<span>${name}</span></div>
+                <div>電話：<span>${phone}</span></div>
+                <div>地址：<span>${address}</span></div>
+            `;
+            if (addressNote) summaryHTML += `<div>地址補充：<span>${addressNote}</span></div>`;
+            summaryHTML += `<div>套餐：<span>${packageText}</span></div>`;
+            if (packageNote) summaryHTML += `<div>套餐補充：<span>${packageNote}</span></div>`;
+            summaryHTML += `
+                <div>送貨日期：<span>${date}</span></div>
+                <div>送貨時間：<span>${time}</span></div>
+            `;
+            if (timeNote) summaryHTML += `<div>時間補充：<span>${timeNote}</span></div>`;
+            if (remark) summaryHTML += `<div>備註：<span>${remark}</span></div>`;
+            
+            document.getElementById('summaryContent').innerHTML = summaryHTML;
+
+            // 3. 【關鍵】立即顯示彈窗！
+            document.getElementById('successModal').style.display = 'block';
+
+            // 4. 觸發 Meta Pixel (Purchase)
+            if (typeof fbq === 'function') {
+                fbq('track', 'Purchase', {
+                    value: parseFloat(packageValue),
+                    currency: 'MOP',
+                    content_type: 'product'
+                });
+            }
+
+            // 5. 最後，嘗試寫入 Supabase
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('orders')
+                        .insert([
+                            {
+                                name: name,
+                                phone: phone,
+                                address: address,
+                                address_note: addressNote,
+                                package: packageText,
+                                package_note: packageNote,
+                                delivery_date: date,
+                                delivery_time: time,
+                                time_note: timeNote,
+                                remark: remark,
+                                total_price: parseFloat(packageValue)
+                            }
+                        ]);
+
+                    if (error) {
+                        console.error('寫入 Supabase 失敗:', error);
+                    } else {
+                        console.log('成功寫入 Supabase:', data);
+                    }
+                } catch (err) {
+                    console.error('連線 Supabase 錯誤:', err);
+                }
+            }
         }
     </script>
 </body>
